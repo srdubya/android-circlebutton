@@ -3,7 +3,6 @@ package at.markushi.ui;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,13 +10,15 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
+import at.markushi.circlebutton.R;
+
 public class CircleButton extends ImageView {
 
 	private static final int PRESSED_COLOR_LIGHTUP = 255 / 25;
 	private static final int PRESSED_RING_ALPHA = 75;
 	private static final int DEFAULT_PRESSED_RING_WIDTH_DIP = 4;
-    private static final int DEFAULT_SHADOW_X_OFFSET_DIP = 1;
-    private static final int DEFAULT_SHADOW_Y_OFFSET_DIP = 2;
+	private static final int DEFAULT_SHADOW_X_OFFSET_DIP = 1;
+	private static final int DEFAULT_SHADOW_Y_OFFSET_DIP = 2;
 	private static final int ANIMATION_TIME_ID = android.R.integer.config_shortAnimTime;
 
 	private int centerY;
@@ -30,14 +31,14 @@ public class CircleButton extends ImageView {
 
 	private float animationProgress;
 
-    private float density = 3.0f;
-    private int shadowColor = Color.GRAY;
-    private int shadowXOffset = (int) TypedValue
-            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SHADOW_X_OFFSET_DIP,
-                    getResources().getDisplayMetrics());
-    private int shadowYOffset = (int) TypedValue
-            .applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SHADOW_Y_OFFSET_DIP,
-                    getResources().getDisplayMetrics());
+	private float density = 3.0f;
+	private int shadowColor = Color.GRAY;
+	private int shadowXOffset = (int) TypedValue
+			.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SHADOW_X_OFFSET_DIP,
+					getResources().getDisplayMetrics());
+	private int shadowYOffset = (int) TypedValue
+			.applyDimension(TypedValue.COMPLEX_UNIT_DIP, DEFAULT_SHADOW_Y_OFFSET_DIP,
+					getResources().getDisplayMetrics());
 
 	private int pressedRingWidth;
 	private int defaultColor = Color.BLACK;
@@ -76,12 +77,12 @@ public class CircleButton extends ImageView {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-        circlePaint.setShadowLayer(getShadowRadius(), shadowXOffset, shadowYOffset, shadowColor);
+		circlePaint.setShadowLayer(getShadowRadius(), shadowXOffset, shadowYOffset, shadowColor);
 
-        canvas.drawCircle(centerX, centerY, pressedRingRadius + animationProgress, focusPaint);
-        canvas.drawCircle(centerX, centerY, outerRadius - pressedRingWidth, circlePaint);
-        super.onDraw(canvas);
-    }
+		canvas.drawCircle(centerX, centerY, pressedRingRadius + animationProgress, focusPaint);
+		canvas.drawCircle(centerX, centerY, outerRadius - pressedRingWidth, circlePaint);
+		super.onDraw(canvas);
+	}
 
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -106,7 +107,7 @@ public class CircleButton extends ImageView {
 		this.pressedColor = getHighlightColor(color, PRESSED_COLOR_LIGHTUP);
 
 		circlePaint.setColor(defaultColor);
-        focusPaint.setColor(defaultColor);
+		focusPaint.setColor(defaultColor);
 		focusPaint.setAlpha(PRESSED_RING_ALPHA);
 
 		this.invalidate();
@@ -129,7 +130,7 @@ public class CircleButton extends ImageView {
 
 		circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		circlePaint.setStyle(Paint.Style.FILL);
-        setLayerType(LAYER_TYPE_SOFTWARE, circlePaint);
+		setLayerType(LAYER_TYPE_SOFTWARE, circlePaint);
 
 		focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		focusPaint.setStyle(Paint.Style.STROKE);
@@ -142,30 +143,30 @@ public class CircleButton extends ImageView {
 			final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleButton);
 			color = a.getColor(R.styleable.CircleButton_cb_color, color);
 			pressedRingWidth = (int) a.getDimension(R.styleable.CircleButton_cb_pressedRingWidth, pressedRingWidth);
-            shadowColor = a.getColor(R.styleable.CircleButton_cb_shadowColor, shadowColor);
-            shadowXOffset = (int) a.getDimension(R.styleable.CircleButton_cb_shadowXOffset, shadowXOffset);
-            shadowYOffset = (int) a.getDimension(R.styleable.CircleButton_cb_shadowYOffset, shadowYOffset);
-            a.recycle();
+			shadowColor = a.getColor(R.styleable.CircleButton_cb_shadowColor, shadowColor);
+			shadowXOffset = (int) a.getDimension(R.styleable.CircleButton_cb_shadowXOffset, shadowXOffset);
+			shadowYOffset = (int) a.getDimension(R.styleable.CircleButton_cb_shadowYOffset, shadowYOffset);
+			a.recycle();
 		}
 
 		setColor(color);
 
-        focusPaint.setStrokeWidth(pressedRingWidth);
+		focusPaint.setStrokeWidth(pressedRingWidth);
 		final int pressedAnimationTime = getResources().getInteger(ANIMATION_TIME_ID);
 		pressedAnimator = ObjectAnimator.ofFloat(this, "animationProgress", 0f, 0f);
 		pressedAnimator.setDuration(pressedAnimationTime);
 
-        density = getResources().getDisplayMetrics().density;
+		density = getResources().getDisplayMetrics().density;
 	}
 
-    private float getShadowRadius() {
-        if(isPressed()){
-            return 0.0f;
-        }
-        return density * 2.0f;
-    }
+	private float getShadowRadius() {
+		if(isPressed()){
+			return 0.0f;
+		}
+		return density * 2.0f;
+	}
 
-    private int getHighlightColor(int color, int amount) {
+	private int getHighlightColor(int color, int amount) {
 		return Color.argb(Math.min(255, Color.alpha(color)), Math.min(255, Color.red(color) + amount),
 				Math.min(255, Color.green(color) + amount), Math.min(255, Color.blue(color) + amount));
 	}
